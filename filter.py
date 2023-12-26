@@ -5,11 +5,11 @@ from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
 import os
 
+print(os.getcwd())
 class ImageFilterApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Image Filter App")
-
         self.image_path = None
         self.original_image = None
         self.filtered_image = None
@@ -91,6 +91,12 @@ class ImageFilterApp:
                 self.canny_button['state'] = 'normal'
         except:
             messagebox.showerror("Error:", "Please choose image in the same folder with the running file or move target image to this folder")
+            self.image_path = None
+            self.original_image = None
+            self.filtered_image = None
+            self.save_button['state'] = 'disabled'
+            self.canny_button['state'] = 'disabled'
+            self.apply_button['state'] = 'disabled'
 
     def display_original(self):
         if self.original_image:
@@ -205,10 +211,13 @@ class ImageFilterApp:
         return thresholed_img
 
     def display_image(self, img):
-        img.thumbnail((400, 400))
-        img = ImageTk.PhotoImage(img)
-        self.image_panel.configure(image=img)
-        self.image_panel.image = img
+        try:
+            img.thumbnail((400, 400))
+            img = ImageTk.PhotoImage(img)
+            self.image_panel.configure(image=img)
+            self.image_panel.image = img
+        except:
+            self.image_panel.configure(image=None)
 
     def Trung_Binh(self, img_matrix, kernel_size):
         height, width = img_matrix.shape
